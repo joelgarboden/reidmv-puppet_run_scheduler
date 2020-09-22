@@ -16,8 +16,9 @@ class puppet_run_scheduler (
   $splaylimit_mins = puppet_run_scheduler::minutes($splaylimit)
 
   $splay_mins = fqdn_rand($splaylimit_mins, 'puppet_run_scheduler')
-  $input_start_hour = Integer($start_time[0,2])
-  $input_start_min  = Integer($start_time[3,2])
+  # https://ask.puppet.com/question/24257/why-does-the-statement-008-0-fail-saying-it-cant-convert-to-numeric/?answer=24302#post-id-24302
+  $input_start_hour = Integer($start_time[0,2].scanf('%d')[0])
+  $input_start_min  = Integer($start_time[3,2].scanf('%d')[0])
 
   $splayed_start_epoch_mins = $input_start_hour * 60 + $input_start_min + $splay_mins
   $first_start_epoch_mins   = $splayed_start_epoch_mins % $interval_mins
